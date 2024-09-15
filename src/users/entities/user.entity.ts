@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude, instanceToPlain } from 'class-transformer';
+import { Exclude } from 'class-transformer';
 import { IsAlphanumeric, IsEmail, IsNumber, IsString } from 'class-validator';
 import { Document } from 'mongoose';
 
@@ -68,3 +68,14 @@ export class User extends Document {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+//! -----------------  TRANSFORMER GLOBAL ---------------------------- //
+UserSchema.set('toJSON', {
+  transform: (doc, ret) => {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.password;
+    delete ret.__v;
+    return ret;
+  },
+});
