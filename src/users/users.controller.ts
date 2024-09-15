@@ -3,13 +3,19 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from 'src/config/pagination.config';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @Controller('users')
 export class UsersController {
@@ -21,8 +27,17 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @ApiOperation({ summary: 'Get all users' })
+  @ApiOkResponse({
+    type: UserResponseDto,
+    description: 'Get all users',
+    status: HttpStatus.OK,
+  })
+  async findAll(
+    @Query('page') page: number = DEFAULT_PAGE,
+    @Query('limit') limit: number = DEFAULT_LIMIT,
+  ): Promise<{ users: User[]; total: number; pages: number }> {
+    return this.usersService.findAll(page, limit);
   }
 
   @Get(':id')

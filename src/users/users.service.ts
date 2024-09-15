@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from './repository/user.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from 'src/config/pagination.config';
 
 @Injectable()
 export class UsersService {
@@ -11,8 +13,11 @@ export class UsersService {
     return this.userRepository.create(createUserDto);
   }
 
-  async findAll() {
-    return this.userRepository.findAll();
+  async findAll(
+    page: number = DEFAULT_PAGE,
+    limit: number = DEFAULT_LIMIT,
+  ): Promise<{ users: User[]; total: number; pages: number }> {
+    return this.userRepository.findAll(page, limit);
   }
 
   async findOne(id: string) {

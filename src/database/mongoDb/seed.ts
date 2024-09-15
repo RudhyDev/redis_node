@@ -15,9 +15,11 @@ async function runSeed() {
   // Gerando dados fictícios e populando o MongoDB
   const users = [];
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 60; i++) {
     users.push({
       name: faker.person.fullName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
       age: Math.floor(Math.random() * 100),
       city: faker.location.city(),
     });
