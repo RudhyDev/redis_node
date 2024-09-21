@@ -1,85 +1,58 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🚀 Projeto Redis Node
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este é um projeto de exemplo que utiliza o framework NestJS para criar uma API RESTful que se conecta a um banco de dados MongoDB e utiliza o Redis como cache.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 📖 Descrição
 
-## Description
+Este projeto é um exemplo de como utilizar o NestJS para criar uma API RESTful que se conecta a um banco de dados MongoDB e utiliza o Redis como cache. O projeto inclui um health check que verifica a saúde do MongoDB.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## ✅ Pré-requisitos
 
-## Project setup
+- 🟢 Node.js 20.x ou superior
+- 🟢 MongoDB 4.x ou superior
+- 🟢 Redis 6.x ou superior
+- 🟢 pnpm
 
-```bash
-$ pnpm install
-```
+## ⚙️ Instalação
 
-## Compile and run the project
+1. Clone o repositório: `git clone https://github.com/seu-usuario/projeto-redis-node.git`
+2. Instale as dependências: `pnpm install`
+3. Configure o MongoDB e o Redis em seu ambiente local
+4. Inicie o servidor: `pnpm start`
 
-```bash
-# development
-$ pnpm run start
+## 🚀 Utilização
 
-# watch mode
-$ pnpm run start:dev
+A API RESTful está disponível em `http://localhost:3000`. Você pode utilizar ferramentas como o Postman ou o cURL para testar as rotas.
 
-# production mode
-$ pnpm run start:prod
-```
+## 📚 Rotas
 
-## Run tests
+- `GET /`: Retorna um health check que verifica a saúde do MongoDB e do Redis
+- `GET /users`: Retorna uma lista de usuários
+- `POST /users`: Cria um novo usuário
+- `GET /users/:id`: Retorna um usuário por ID
+- `PUT /users/:id`: Atualiza um usuário
+- `DELETE /users/:id`: Deleta um usuário
 
-```bash
-# unit tests
-$ pnpm run test
+## 🩺 Health Check
 
-# e2e tests
-$ pnpm run test:e2e
+O health check é realizado utilizando o pacote `@nestjs/terminus`. Ele verifica a saúde do MongoDB e do Redis e retorna um status de saúde.
 
-# test coverage
-$ pnpm run test:cov
-```
+## 🗃️ Cache
 
-## Resources
+O cache é realizado utilizando o Redis. Ele armazena os resultados das consultas ao MongoDB para evitar consultas desnecessárias.
 
-Check out a few resources that may come in handy when working with NestJS:
+## 📄 Licença
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Este projeto é licenciado sob a licença MIT.
 
-## Support
+## 👤 Autor
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Ruhy Maycon Pereira da Costa
 
-## Stay in touch
+## 🙏 Agradecimentos
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Agradeço à equipe do NestJS por criar um framework tão incrível!
 
-## License
+## 🤝 Contribuição
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Este projeto é open-source e você pode contribuir com ele. Para contribuir, basta enviar um pull request com suas alterações.
