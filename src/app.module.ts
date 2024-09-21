@@ -4,9 +4,11 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ValidationPipe } from '@nestjs/common';
+import { TerminusModule } from '@nestjs/terminus';
 
 @Module({
   imports: [
+    TerminusModule,
     MongooseModule.forRoot('mongodb://localhost/teste-caches'),
     UsersModule,
   ],
