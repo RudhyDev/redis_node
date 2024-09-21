@@ -1,16 +1,21 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  Query,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from 'src/config/pagination.config';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @Controller('users')
 export class UsersController {
@@ -22,22 +27,31 @@ export class UsersController {
   }
 
   @Get()
-  async findAll(): Promise<User[]> {
-    return await this.usersService.findAll();
+  @ApiOperation({ summary: 'Get all users' })
+  @ApiOkResponse({
+    type: UserResponseDto,
+    description: 'Get all users',
+    status: HttpStatus.OK,
+  })
+  async findAll(
+    @Query('page') page: number = DEFAULT_PAGE,
+    @Query('limit') limit: number = DEFAULT_LIMIT,
+  ): Promise<{ users: User[]; total: number; pages: number }> {
+    return this.usersService.findAll(page, limit);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+    return this.usersService.findOne(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  delete(@Param('id') id: string) {
+    return this.usersService.delete(id);
   }
 }

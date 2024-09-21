@@ -1,23 +1,16 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from './entities/user.entity';
+import { UserRepository } from './repository/user.repository';
 import { UsersController } from './users.controller';
-import { PrismaService } from 'src/config/prisma';
-import { UserRepository } from 'src/repositories/user-repository';
-import { PrismaUserRepository } from 'src/repositories/prisma/prisma-user-repository';
-import { RedisUserRepository } from 'src/repositories/cache/redis-user-repository';
+import { UsersService } from './users.service';
 import { RedisService } from 'src/config/redis';
 
 @Module({
-  controllers: [UsersController],
-  providers: [
-    UsersService,
-    PrismaService,
-    RedisService,
-    PrismaUserRepository,
-    {
-      provide: UserRepository,
-      useClass: RedisUserRepository,
-    },
+  imports: [
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
+  controllers: [UsersController],
+  providers: [UsersService, UserRepository, RedisService],
 })
 export class UsersModule {}
