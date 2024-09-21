@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { RedisService } from 'src/config/redis';
@@ -44,8 +48,18 @@ export class UserRepository {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const createdUser = new this.userModel(createUserDto);
-    return createdUser.save();
+    try {
+      const createdUser = new this.userModel(createUserDto);
+
+      await createdUser.save();
+
+      return createdUser.id;
+    } catch (error) {
+      if (error && error.code === 11000) {
+        throw new BadRequestException('Email já cadastrado em nossa base');
+      }
+      throw new InternalServerErrorException('Failed to create user');
+    }
   }
 
   async findOne(id: string): Promise<User | null> {
