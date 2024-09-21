@@ -8,21 +8,18 @@ Este projeto é um exemplo de como utilizar o NestJS para criar uma API RESTful 
 
 ## ✅ Pré-requisitos
 
-- 🟢 Node.js 20.x ou superior
-- 🟢 MongoDB 4.x ou superior
-- 🟢 Redis 6.x ou superior
-- 🟢 pnpm
+- 🟢 Docker
+- 🟢 Docker Compose
 
 ## ⚙️ Instalação
 
 1. Clone o repositório: `git clone https://github.com/seu-usuario/projeto-redis-node.git`
-2. Instale as dependências: `pnpm install`
-3. Configure o MongoDB e o Redis em seu ambiente local
-4. Inicie o servidor: `pnpm start`
+2. Navegue até o diretório do projeto: `cd projeto-redis-node`
+3. Inicie os containers Docker: `docker-compose up --build`
 
 ## 🚀 Utilização
 
-A API RESTful está disponível em `http://localhost:3000`. Você pode utilizar ferramentas como o Postman ou o cURL para testar as rotas.
+A API RESTful estará disponível em `http://localhost:3000`. Você pode utilizar ferramentas como o Postman ou o cURL para testar as rotas.
 
 ## 📚 Rotas
 
@@ -40,6 +37,19 @@ O health check é realizado utilizando o pacote `@nestjs/terminus`. Ele verifica
 ## 🗃️ Cache
 
 O cache é realizado utilizando o Redis. Ele armazena os resultados das consultas ao MongoDB para evitar consultas desnecessárias.
+
+## 🐳 Docker
+
+O projeto está dockerizado e utiliza o Docker Compose para gerenciar os serviços. O arquivo `docker-compose.yml` define três serviços:
+
+- `mongo`: Banco de dados MongoDB
+- `redis`: Servidor Redis
+- `app`: Aplicação Node.js utilizando NestJS
+
+### Comandos Docker
+
+- Para iniciar os serviços: `docker-compose up --build`
+- Para parar os serviços: `docker-compose down`
 
 ## 📄 Licença
 

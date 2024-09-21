@@ -17,6 +17,23 @@ services:
     volumes:
       - ./redis-data:/data
 
+  app:
+    build: .
+    container_name: 'node-app'
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/nest
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - .:/app
+      - /app/node_modules
+
 volumes:
   mongo-data:
   redis-data:

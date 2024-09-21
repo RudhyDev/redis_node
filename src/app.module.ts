@@ -1,29 +1,20 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { TerminusModule } from '@nestjs/terminus';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { MongooseModule } from '@nestjs/mongoose';
-import { ValidationPipe } from '@nestjs/common';
-import { TerminusModule } from '@nestjs/terminus';
+import { RedisService } from './config/redis';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    MongooseModule.forRoot(process.env.MONGO_URL),
     TerminusModule,
-    MongooseModule.forRoot('mongodb://localhost/teste-caches'),
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: 'APP_PIPE',
-      useValue: new ValidationPipe({
-        whitelist: true,
-        forbidNonWhitelisted: true,
-        enableDebugMessages: true,
-        transform: true,
-      }),
-    },
-  ],
+  providers: [AppService, RedisService],
 })
 export class AppModule {}

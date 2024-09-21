@@ -1,34 +1,39 @@
-import { PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
+import { connect, model } from 'mongoose';
+import { UserSchema } from 'src/users/entities/user.entity';
 
-const prisma = new PrismaClient();
+async function runSeed() {
+  const mongoUrl =
+    process.env.MONGO_URL || 'mongodb://localhost:27017/teste-caches';
+  await connect(mongoUrl);
 
-async function run() {
-  await prisma.user.deleteMany();
+  const UserModel = model('User', UserSchema);
 
-  const promises = [];
+  await UserModel.deleteMany({});
 
-  for (let i = 0; i < 10; i++) {
-    promises.push(
-      prisma.user.create({
-        data: {
-          name: faker.person.fullName(),
-          age: Math.floor(Math.random() * 100),
-          city: faker.location.city(),
-        },
-      }),
-    );
+  const users = [];
+
+  for (let i = 0; i < 60; i++) {
+    users.push({
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+      age: Math.floor(Math.random() * 100),
+      city: faker.location.city(),
+    });
   }
 
-  await Promise.all(promises);
+  await UserModel.insertMany(users);
+
+  console.log('Seed complete: Users inserted');
 }
 
-run()
-  .then(async () => {
-    await prisma.$disconnect();
+runSeed()
+  .then(() => {
+    console.log('Seed completed successfully');
+    process.exit(0);
   })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
+  .catch((error) => {
+    console.error('Error seeding data:', error);
     process.exit(1);
   });
