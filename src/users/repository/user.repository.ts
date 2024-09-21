@@ -19,7 +19,8 @@ export class UserRepository {
     page: number = DEFAULT_PAGE,
     limit: number = DEFAULT_LIMIT,
   ): Promise<{ users: User[]; total: number; pages: number }> {
-    const cachedUsers = await this.redis.get(`users:${page}:${limit}`);
+    const cacheKey = `users:${page}:${limit}`;
+    const cachedUsers = await this.redis.get(cacheKey);
 
     if (!cachedUsers) {
       const users = await this.userModel
@@ -31,12 +32,8 @@ export class UserRepository {
       const total = await this.userModel.countDocuments().exec();
       const pages = Math.ceil(total / limit);
 
-      await this.redis.set(
-        `users:${page}:${limit}`,
-        JSON.stringify({ users, total, pages }),
-        'EX',
-        10 * 60,
-      );
+      const cacheValue = JSON.stringify({ users, total, pages });
+      await this.redis.set(cacheKey, cacheValue, 'EX', 10 * 60);
 
       console.log('\x1b[33m%s\x1b[0m', 'From Database');
       return { users, total, pages };
