@@ -24,7 +24,7 @@ export class UsersService {
       const createdUser = new this.userModel(createUserDto);
       await createdUser.save();
 
-      const cacheKey = `user:${createdUser._id}`;
+      const cacheKey = `user:${createdUser.email}`;
       await this.cacheService.set(
         cacheKey,
         JSON.stringify(createdUser),
@@ -44,28 +44,28 @@ export class UsersService {
     page: number = DEFAULT_PAGE,
     limit: number = DEFAULT_LIMIT,
   ): Promise<{ users: User[]; total: number; pages: number }> {
-    const cacheKey = `users:${page}:${limit}`;
-    const cachedUsers = await this.cacheService.get(cacheKey);
+    const users = [];
+    const skip = (page - 1) * limit;
 
-    if (!cachedUsers) {
-      const users = await this.userModel
-        .find()
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .exec();
+    const userDocs = await this.userModel.find().skip(skip).limit(limit).exec();
 
-      const total = await this.userModel.countDocuments().exec();
-      const pages = Math.ceil(total / limit);
+    for (const user of userDocs) {
+      const cacheKey = `user:${user.email}`;
+      const cachedUser = await this.cacheService.get(cacheKey);
 
-      const cacheValue = JSON.stringify({ users, total, pages });
-      await this.cacheService.set(cacheKey, cacheValue, 10 * 60);
-
-      console.log('\x1b[33m%s\x1b[0m', 'From Database');
-      return { users, total, pages };
+      if (cachedUser) {
+        console.log('\x1b[33m%s\x1b[0m', 'From Cache');
+        users.push(JSON.parse(cachedUser));
+      } else {
+        users.push(user);
+        await this.cacheService.set(cacheKey, JSON.stringify(user), 10 * 60);
+      }
     }
 
-    console.log('\x1b[33m%s\x1b[0m', 'From Cache');
-    return JSON.parse(cachedUsers);
+    const total = await this.userModel.countDocuments().exec();
+    const pages = Math.ceil(total / limit);
+
+    return { users, total, pages };
   }
 
   async findOne(id: string): Promise<User> {
@@ -95,7 +95,7 @@ export class UsersService {
       throw new NotFoundException(`User with ID "${id}" not found`);
     }
 
-    const cacheKey = `user:${id}`;
+    const cacheKey = `user:${updatedUser.email}`;
     await this.cacheService.set(cacheKey, JSON.stringify(updatedUser), 10 * 60);
 
     return updatedUser;
@@ -107,7 +107,7 @@ export class UsersService {
       throw new NotFoundException(`User with ID "${id}" not found`);
     }
 
-    const cacheKey = `user:${id}`;
+    const cacheKey = `user:${deletedUser.email}`;
     await this.cacheService.del(cacheKey);
 
     return deletedUser;
