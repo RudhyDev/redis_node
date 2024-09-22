@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './entities/user.entity';
-import { UserRepository } from './repository/user.repository';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { RedisService } from 'src/config/redis';
@@ -11,6 +10,6 @@ import { RedisService } from 'src/config/redis';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   controllers: [UsersController],
-  providers: [UsersService, UserRepository, RedisService],
+  providers: [UsersService, RedisService],
 })
 export class UsersModule {}
