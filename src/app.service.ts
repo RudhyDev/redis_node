@@ -6,14 +6,14 @@ import {
   HealthIndicatorResult,
   HealthCheckError,
 } from '@nestjs/terminus';
-import { RedisService } from 'src/config/redis'; // Importa o RedisService existente
+import { AbstractCacheService } from './database/cache/abstract-cache.service';
 
 @Injectable()
 export class AppService {
   constructor(
     private readonly health: HealthCheckService,
     private readonly mongooseHealthIndicator: MongooseHealthIndicator,
-    private readonly redisService: RedisService,
+    private readonly cacheService: AbstractCacheService,
   ) {}
 
   @HealthCheck()
@@ -33,7 +33,7 @@ export class AppService {
 
   private async redisHealthCheck(): Promise<HealthIndicatorResult> {
     try {
-      await this.redisService.ping();
+      await this.cacheService.get('health-check');
       return { redis: { status: 'up' } };
     } catch (err) {
       throw new HealthCheckError('Redis check failed', err);

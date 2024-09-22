@@ -9,14 +9,14 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { RedisService } from 'src/config/redis';
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from 'src/config/pagination.config';
+import { CacheService } from 'src/database/cache/cache.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
-    private readonly redis: RedisService,
+    private readonly cacheService: CacheService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -37,7 +37,7 @@ export class UsersService {
     limit: number = DEFAULT_LIMIT,
   ): Promise<{ users: User[]; total: number; pages: number }> {
     const cacheKey = `users:${page}:${limit}`;
-    const cachedUsers = await this.redis.get(cacheKey);
+    const cachedUsers = await this.cacheService.get(cacheKey);
 
     if (!cachedUsers) {
       const users = await this.userModel
@@ -50,7 +50,7 @@ export class UsersService {
       const pages = Math.ceil(total / limit);
 
       const cacheValue = JSON.stringify({ users, total, pages });
-      await this.redis.set(cacheKey, cacheValue, 'EX', 10 * 60);
+      await this.cacheService.set(cacheKey, cacheValue, 10 * 60);
 
       console.log('\x1b[33m%s\x1b[0m', 'From Database');
       return { users, total, pages };
